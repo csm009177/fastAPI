@@ -1,20 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
 </head>
+
 <body>
   hello world
+  <form action="/create" method="post"> <!-- "/" 경로에 POST 요청을 보냄 -->
+    <label for="name">Name:
+      <input type="text" id="name" name="name" required>
+    </label>
+    <label for="description">Description:
+      <input type="text" id="description" name="description">
+    </label>
+    <button type="submit">Create</button>
+  </form>
   <script>
-    function loadScript(src, callback) {
-      let script = document.createElement('script');
-      script.src = src;
-      script.onload = () => callback(null, script);
-      script.onerror = () => callback(new Error(`Script load error for ${src}`));
-      document.head.append(script);
-    }
+    document.querySelector('form').addEventListener('submit', function (event) {
+      event.preventDefault();
+      const name = document.querySelector('#name').value;
+      const description = document.querySelector('#description').value;
+      fetch('/create', { // "/" 경로에 POST 요청을 보냄
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name: name, description: description })
+      })
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+    });
   </script>
 </body>
+
 </html>
