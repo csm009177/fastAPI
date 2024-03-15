@@ -4,6 +4,7 @@
 import json
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 # FastAPI 애플리케이션 생성
 app = FastAPI()
@@ -23,29 +24,30 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/")
-def read_root():
-    return {"Greet": "Hello, FastAPI!" }
+# @app.get("/")
+# def read_root():
+#     return {"Greet": "Hello, FastAPI!" }
 
-database = []
-@app.post("/create")
-def create_data(data: dict):
-    database.append(data)
-    save_to_json(database)  # 데이터를 JSON 파일에 저장
-    return {"message": "Data created successfully"}
+app.mount("/", StaticFiles(directory=".", html=True), name="www")
 
-def save_to_json(data):
-    with open("data.json", "w") as json_file:
-        json.dump(data, json_file)
+# database = []
+# @app.post("/create")
+# def create_data(data: dict):
+#     database.append(data)
+#     save_to_json(database)  # 데이터를 JSON 파일에 저장
+#     return {"message": "Data created successfully"}
 
-@app.get("/read")
-def get_all_data():
-    return database
+# def save_to_json(data):
+#     with open("data.json", "w") as json_file:
+#         json.dump(data, json_file)
 
-def save_to_json(data):
-    with open("data.json", "w") as json_file:
-        json.dump(data, json_file)
+# @app.get("/read")
+# def get_all_data():
+#     return database
 
+# def save_to_json(data):
+#     with open("data.json", "w") as json_file:
+#         json.dump(data, json_file)
 
 
 # FastAPI 서버 실행
